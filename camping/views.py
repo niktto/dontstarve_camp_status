@@ -19,11 +19,17 @@ class CampTemplateView(TemplateView):
 
 
 def pass_day_view(request):
+    if not request.user.is_superuser:
+        messages.add_message(request, messages.WARNING, u"Nie jesteś adminem, nie oszukuj.")
+        return redirect('/')
+
     camp = Camp.objects.all()[:1][0]
     camp.remove_day_of_resources()
+
     if camp.was_found():
         messages.add_message(request, messages.WARNING, u"Obóz został odkryty!")
     else:
         messages.add_message(request, messages.INFO, u"Obóz jest bezpieczny.")
+
     camp.save()
     return redirect('/')
