@@ -61,7 +61,8 @@ class Camp(models.Model):
             ('2', u'2'),
             ('3', u'3 - opuszczona fortyfikacja na wzniesieniu'),
         ),
-        max_length=3
+        max_length=3,
+        help_text=u"Podaj od 1 do 100 (bo to procenty)"
     )
     visibility = models.IntegerField(
         verbose_name=u"Widoczność obozu",
@@ -87,7 +88,7 @@ class Camp(models.Model):
     has_real_beds = models.BooleanField(verbose_name=u"Łóżka", default=False)
     has_storage = models.BooleanField(verbose_name=u"Przestrzeń magazynowa", default=False)
 
-    campers = models.ManyToManyField(Camper)
+    campers = models.ManyToManyField(Camper, blank=True)
 
     def __unicode__(self):
         return self.name
