@@ -19,7 +19,7 @@ from camping.views import CampTemplateView, pass_day_view, CampListView
 
 urlpatterns = [
     url(r'^$', CampListView.as_view()),
-    url(r'^(?P<uri>.*)/$', CampTemplateView.as_view(), name="details"),
-    url(r'^(?P<uri>.*)/passday/$', pass_day_view),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^(?P<uri>.*)/passday/$', pass_day_view, name='passday'),
+    url(r'^(?P<uri>.*)/$', CampTemplateView.as_view(), name="details"),
 ]

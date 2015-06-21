@@ -24,13 +24,13 @@
           {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">{{ message }}</div>
+                <div class="alert {% if message.tags %}alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% else %}alert-info{% endif %}">{{ message }}</div>
                 {% endfor %}
             </ul>
             {% endif %}
           </div>
       <div class="row">
-        <h1>Parametry obozu <a href="/passday/"><button type="button" class="btn btn-primary">Upłyń dzień</button></a> <a href="/admin/" target="_blank"><button type="button" class="btn btn-warning">Zarządzaj</button></a></h1>
+        <h1>Parametry obozu <a href="{% url 'passday' camp.uri %}"><button type="button" class="btn btn-primary">Upłyń dzień</button></a> <a href="/admin/" target="_blank"><button type="button" class="btn btn-warning">Zarządzaj</button></a></h1>
         <h2>{{ today | date:"l d F Y" }}</h2>
           <p class="lead">Nie jest to jakieś ambitne, ale powinno obliczać zużycie jedzenia, wody i wolny czas.</p>
       </div>

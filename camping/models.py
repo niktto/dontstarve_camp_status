@@ -116,11 +116,37 @@ class Camp(models.Model):
         return base_hours
 
     def remove_day_of_resources(self):
+        errors = []
+
+        if self.amount_of_water_stored <= 0:
+            errors.append(u"Brak wody w obozie!")
+            self.amount_of_water_stored = 0
+        if self.amount_of_food_stored <= 0:
+            errors.append(u"Brak jedzenia w obozie!")
+            self.amount_of_food_stored = 0
+
+        if errors:
+            return 0, 0, errors
+
         removed_water = self.daily_usage_of_water
         removed_food = self.daily_usage_of_food
 
-        self.amount_of_food_stored -= removed_food
-        self.amount_of_water_stored -= removed_water
+        if removed_water > self.amount_of_water_stored:
+            missing_water = removed_water - self.amount_of_water_stored
+            errors.append(u"Do zaspokojenia pragnienia zabrakło {} litrów wody!".format(missing_water))
+            self.amount_of_water_stored = 0
+            removed_water -= missing_water
+        if removed_food > self.amount_of_food_stored:
+            missing_food = removed_food - self.amount_of_food_stored
+            errors.append(u"Do zaspokojenia głody zabrakło {} jednostek jedzenia!".format(missing_food))
+            self.amount_of_food_stored = 0
+            removed_food -= missing_food
+
+        if not errors:
+            self.amount_of_food_stored -= removed_food
+            self.amount_of_water_stored -= removed_water
+
+        return removed_water, removed_food, errors
 
     @property
     def daily_usage_of_water(self):
@@ -148,3 +174,9 @@ class DayPassedLog(models.Model):
         decimal_places=2,
         max_digits=8
     )
+
+    def __unicode__(self):
+        if self.pk:
+            return u'Day {} at {}'.format(self.pk, self.camp.name)
+        else:
+            return 'New day'

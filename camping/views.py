@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from django.views.generic import TemplateView, ListView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from .models import Camp, DayPassedLog
 
@@ -35,11 +36,14 @@ class CampTemplateView(TemplateView):
 def pass_day_view(request, *args, **kwargs):
     if not request.user.is_superuser:
         messages.add_message(request, messages.WARNING, u"Nie jesteś adminem, nie oszukuj.")
-        return redirect('/')
+        return redirect(reverse('details', kwargs={'uri': kwargs['uri']}))
 
     camp = get_object_or_404(Camp, uri=kwargs['uri'])
     was_found = camp.was_found()
-    water_used, food_used = camp.remove_day_of_resources()
+    water_used, food_used, errors = camp.remove_day_of_resources()
+
+    for error in errors:
+        messages.add_message(request, messages.ERROR, error)
 
     DayPassedLog(
         camp=camp,
@@ -54,4 +58,4 @@ def pass_day_view(request, *args, **kwargs):
         messages.add_message(request, messages.INFO, u"Obóz jest bezpieczny.")
 
     camp.save()
-    return redirect('/')
+    return redirect(reverse('details', kwargs={'uri': kwargs['uri']}))
