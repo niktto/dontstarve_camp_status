@@ -12,7 +12,7 @@
     <title>Status obozu</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
   </head>
 
   <body>
@@ -31,7 +31,8 @@
           </div>
       <div class="row">
         <h1>Parametry obozu <a href="/passday/"><button type="button" class="btn btn-primary">Upłyń dzień</button></a> <a href="/admin/" target="_blank"><button type="button" class="btn btn-warning">Zarządzaj</button></a></h1>
-        <p class="lead">Nie jest to jakieś ambitne, ale powinno obliczać zużycie jedzenia, wody i wolny czas.</p>
+        <h2>{{ today | date:"l d F Y" }}</h2>
+          <p class="lead">Nie jest to jakieś ambitne, ale powinno obliczać zużycie jedzenia, wody i wolny czas.</p>
       </div>
           <div class="row">
               <div class="col-lg-12">

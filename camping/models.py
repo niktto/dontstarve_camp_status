@@ -38,6 +38,18 @@ class Camp(models.Model):
         verbose_name = u"Obóz"
         verbose_name_plural = u"Obozy"
 
+    name = models.CharField(max_length=255, verbose_name=u"Nazwa obozu")
+
+    uri = models.CharField(
+        max_length=50,
+        verbose_name=u"Nazwa w adresie",
+        help_text=(
+            u"Nazwa bądź fragment nazwy, który nadaje się do umieszczenia w "
+            u"linku do obozowiska. Może być inna niż nazwa obozu."
+        ),
+        unique=True
+    )
+
     security = models.CharField(
         verbose_name=u"Bezpieczeństwo obozu",
         choices=(
@@ -61,13 +73,13 @@ class Camp(models.Model):
 
     amount_of_water_stored = models.DecimalField(
         verbose_name=u"Jednostki zebranej wody",
-        decimal_places=1,
-        max_digits=4
+        decimal_places=2,
+        max_digits=8
     )
     amount_of_food_stored = models.DecimalField(
         verbose_name=u"Jednostki zebranego jedzenia",
-        decimal_places=1,
-        max_digits=4
+        decimal_places=2,
+        max_digits=8
     )
 
     has_food_utensils = models.BooleanField(verbose_name=u"Utensylia do gotowania", default=False)
@@ -78,10 +90,10 @@ class Camp(models.Model):
     campers = models.ManyToManyField(Camper)
 
     def __unicode__(self):
-        return "Oboz"
+        return self.name
 
     def was_found(self):
-        return k100() >= self.visibility
+        return k100() <= self.visibility
 
     @property
     def hours_for_activity(self):
@@ -117,3 +129,22 @@ class Camp(models.Model):
     @property
     def daily_usage_of_food(self):
         return sum([camper.amount_of_food_needed for camper in self.campers.all()])
+
+
+class DayPassedLog(models.Model):
+
+    camp = models.ForeignKey(Camp)
+
+    was_found_that_day = models.BooleanField()
+
+    water_used = models.DecimalField(
+        verbose_name=u"Jednostki zużytej wody",
+        decimal_places=2,
+        max_digits=8
+    )
+
+    food_used = models.DecimalField(
+        verbose_name=u"Jednostki zużytego jedzenia",
+        decimal_places=2,
+        max_digits=8
+    )

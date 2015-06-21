@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Status obozu</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="starter-template">
+          <div class="row">
+          {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">{{ message }}</div>
+                {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+      <div class="row">
+        <h1>Obozy <a href="/admin/" target="_blank"><button type="button" class="btn btn-warning">Zarządzaj</button></a></h1>
+        <h2>{{ today | date:"l d F Y" }}</h2>
+          <p class="lead">Lista wszystkich istniejących obozów.</p>
+      </div>
+            <div class="row">
+              <div class="col-lg-12">
+                  <ul>
+              {% for camp in object_list %}
+              <li><a href="{% url 'details' camp.uri %}">{{ camp.name }}</a></li>
+              {% endfor %}
+              </ul>
+
+              </div>
+              </div>
+
+      </div>
+
+    </div><!-- /.container -->
+
+  </body>
+</html>
